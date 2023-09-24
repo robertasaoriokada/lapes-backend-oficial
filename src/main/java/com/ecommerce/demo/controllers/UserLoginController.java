@@ -17,7 +17,7 @@ public class UserLoginController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
+    @PostMapping("/create")
     public String createUser(@Valid @RequestBody String username, String password, Boolean isAdmin) {
         userService.createUser(new User(username, password, isAdmin));
         return "User criado com sucesso";
