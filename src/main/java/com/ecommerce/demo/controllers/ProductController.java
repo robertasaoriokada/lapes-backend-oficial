@@ -12,44 +12,42 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.demo.entities.Product;
-// import com.ecommerce.demo.services.CategoryNotFoundException;
-// import com.ecommerce.demo.services.CategoryService;
 import com.ecommerce.demo.services.ProductService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping(path = "/product", produces = { "application/json" })
+@Tag(name = "ecommerce")
 public class ProductController {
     @Autowired
     private ProductService productService;
-    // @Autowired
-    // private CategoryService categoryService;
 
+    @Operation(summary = "Cria uma novo produto se a categoria passada como parâmeetro existir", method = "POST")
     @PostMapping("/create")
     public String createProduct(@Valid @RequestBody String nameProduct, String description, Double price,
             Integer idCategory,
             String urlProduct) {
-        // if (categoryService.listOneCategoryById(idCategory) != null) {
         productService.createProduct(new Product(nameProduct, description, price,
                 idCategory, urlProduct));
         return "Success";
-        // } else {
-        // throw new CategoryNotFoundException("A categoria associada ao produto não
-        // existe");
-        // }
     }
 
+    @Operation(summary = "Lista todos os produtos existentes", method = "GET")
     @GetMapping(path = "/listAll")
     public Iterable<Product> listarProducts() {
         return productService.listProducts();
     }
 
+    @Operation(summary = "Lista um produto através do ID", method = "GET")
     @GetMapping(path = "/list")
     public Optional<Product> listProductById(@RequestParam(name = "id") Integer id) {
         return productService.listProductById(id);
     }
 
+    @Operation(summary = "Deleta um produto pelo ID", method = "DELETE")
     @DeleteMapping(path = "/delete")
     public String deleteProductByBy(@RequestParam(name = "id") Integer id) {
         productService.deleteProductById(id);
